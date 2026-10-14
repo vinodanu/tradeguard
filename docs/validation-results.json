@@ -1,0 +1,102 @@
+{
+  "date": "2026-10-14",
+  "backend": {
+    "status": "PASS",
+    "java": "21",
+    "springBoot": "4.0.8",
+    "packagedServices": 4,
+    "tests": [
+      {
+        "suite": "com.tradeguard.AccessTest",
+        "tests": 9,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "suite": "com.tradeguard.compliance.ProviderFixtureTest",
+        "tests": 1,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "suite": "com.tradeguard.compliance.RuleEngineTest",
+        "tests": 13,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "suite": "com.tradeguard.investigation.CaseWorkflowTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "suite": "com.tradeguard.trade.CsvTest",
+        "tests": 10,
+        "failures": 0,
+        "errors": 0
+      },
+      {
+        "suite": "com.tradeguard.trade.TradeWorkflowTest",
+        "tests": 5,
+        "failures": 0,
+        "errors": 0
+      }
+    ],
+    "totalTests": 43
+  },
+  "frontend": {
+    "productionBuild": "PASS",
+    "unitTests": 6,
+    "browserTests": 1,
+    "browserScope": "Fixture-driven login, desktop/mobile navigation, order dialog, and ruleset comparison"
+  },
+  "contracts": {
+    "jsonSchema": "PASS",
+    "consumerPact": "PASS",
+    "javaProviderSerialization": "PASS",
+    "windowsPrerequisite": "Microsoft Visual C++ runtime required by Pact FFI; existing bundled runtime used for this validation"
+  },
+  "infrastructure": {
+    "terraformFormat": "PASS",
+    "terraformValidate": "PASS",
+    "composeLocalConfig": "PASS",
+    "composeAwsConfig": "PASS",
+    "pythonScriptCompilation": "PASS"
+  },
+  "dependencyAudit": {
+    "scope": "frontend production dependencies",
+    "vulnerabilities": 0
+  },
+  "pending": [
+    "Docker image build and real-stack startup",
+    "Testcontainers integration execution",
+    "Real-stack acceptance/recovery scenarios",
+    "Coordinated backup/restore execution",
+    "30-minute performance benchmark and memory sizing",
+    "AWS account cost gate and provisioning",
+    "Full-system recruiter recording"
+  ],
+  "blockers": [
+    "Docker Linux engine unavailable; Docker CLI cannot find its engine pipe",
+    "Docker Desktop CLI startup fails because its installation registry entry is absent",
+    "Automatic approval review rejected launching Docker Desktop because sandbox approvals are disabled",
+    "AWS credit balance, expiry dates, region and access have not been provided"
+  ],
+  "startupFix": {
+    "status": "LF_CHECK_PASSED",
+    "scriptsCorrected": 7,
+    "repairScriptSyntax": "PASSED",
+    "userReportedImagesBuilt": 5,
+    "runtimeStatus": "User reported mysql and kafka-init startup failures; repair requires rerun in user PowerShell",
+    "agentDockerAccess": "Denied by Docker pipe permissions"
+  },
+  "loginFix": {
+    "cause": "Empty Authorization Bearer header on public login request",
+    "frontendApiTests": 6,
+    "springBearerResolverTests": 2,
+    "pythonClientTests": 3,
+    "productionBuild": "PASS",
+    "liveLogin": "Requires user to rebuild web container; session cannot access Docker"
+  }
+}

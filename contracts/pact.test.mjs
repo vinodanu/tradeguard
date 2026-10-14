@@ -1,0 +1,12 @@
+import {MessageConsumerPact,MessageProviderPact,synchronousBodyHandler,MatchersV3} from '@pact-foundation/pact';
+import {fileURLToPath} from 'node:url';import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import Ajv from 'ajv/dist/2020.js';import addFormats from 'ajv-formats';
+const directory=path.dirname(fileURLToPath(import.meta.url));
+const ajv=new Ajv();addFormats(ajv);const validate=ajv.compile(JSON.parse(fs.readFileSync(path.join(directory,'event-v1.schema.json'))));
+const fixturePath=path.join(directory,'../compliance-service/target/provider-event.json');
+if(!fs.existsSync(fixturePath))throw new Error('Run mvn test first to create the provider serialization fixture');
+const actual=JSON.parse(fs.readFileSync(fixturePath));assert.ok(validate(actual),JSON.stringify(validate.errors));
+const content={eventId:MatchersV3.uuid(),eventType:'PreTradeEvaluated',schemaVersion:1,aggregateId:MatchersV3.like('order-1'),aggregateVersion:MatchersV3.integer(1),occurredAt:MatchersV3.like('2026-10-14T00:00:00Z'),correlationId:MatchersV3.like('order-1'),payload:{orderId:MatchersV3.like('order-1'),evaluationId:MatchersV3.like('evaluation-1'),attempt:MatchersV3.integer(1),outcome:'ALLOW',portfolioId:'PORTFOLIO_A'}};
+const pact=new MessageConsumerPact({consumer:'trade-service',provider:'compliance-service',dir:path.join(directory,'pacts'),logLevel:'error'});
+await pact.expectsToReceive('an allowed pre-trade evaluation').withContent(content).verify(synchronousBodyHandler(body=>{assert.ok(validate(body),JSON.stringify(validate.errors));assert.equal(body.payload.outcome,'ALLOW');assert.equal(typeof body.payload.evaluationId,'string');assert.equal(typeof body.payload.attempt,'number');}));
+await new MessageProviderPact({provider:'compliance-service',pactUrls:[path.join(directory,'pacts/trade-service-compliance-service.json')],messageProviders:{'an allowed pre-trade evaluation':()=>actual},logLevel:'error'}).verify();
+console.log('PASS: consumer Pact and Java provider serialization verified');

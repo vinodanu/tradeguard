@@ -1,0 +1,23 @@
+name: Publish versioned images
+on:
+  push: {branches: [main]}
+permissions: {contents: read, packages: write}
+jobs:
+  images:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: {service: [trade-service, compliance-service, investigation-service, live-view-service, web]}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with: {registry: ghcr.io, username: '${{ github.actor }}', password: '${{ secrets.GITHUB_TOKEN }}'}
+      - name: Build and push
+        env: {SERVICE: '${{ matrix.service }}', REPO: '${{ github.repository }}', TAG: '${{ github.sha }}'}
+        run: |
+          PREFIX="ghcr.io/${REPO,,}"
+          if [ "$SERVICE" = web ]; then
+            docker build -t "$PREFIX/web:$TAG" frontend
+          else
+            docker build --build-arg SERVICE="$SERVICE" -t "$PREFIX/$SERVICE:$TAG" .
+          fi
+          docker push "$PREFIX/$SERVICE:$TAG"

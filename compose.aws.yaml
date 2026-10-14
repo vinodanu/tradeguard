@@ -1,0 +1,22 @@
+# Requires Docker Compose 2.24.4+ for !override.
+services:
+  mongo:
+    profiles: [local-databases]
+  mongo-init:
+    profiles: [local-databases]
+  compliance-service:
+    depends_on: !override
+      kafka-init: {condition: service_completed_successfully}
+    environment:
+      MONGO_URI: ${ATLAS_COMPLIANCE_URI:?Provide Atlas URI with compliance credentials}
+  live-view-service:
+    depends_on: !override
+      kafka-init: {condition: service_completed_successfully}
+    environment:
+      MONGO_URI: ${ATLAS_LIVE_URI:?Provide Atlas URI with liveview credentials}
+  web:
+    ports: !override ["80:80", "443:443"]
+    volumes:
+      - ./infra/aws/nginx-https.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./secrets/tls:/etc/letsencrypt:ro
+      - ./secrets/acme:/var/www/acme:ro

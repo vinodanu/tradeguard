@@ -1,0 +1,10 @@
+region = "us-east-1"
+owner_cidr = "203.0.113.10/32"
+github_repository = "your-user/tradeguard"
+github_oidc_provider_arn = "arn:aws:iam::YOUR_ACCOUNT:oidc-provider/token.actions.githubusercontent.com"
+credits_verified = false
+credit_balance_usd = 0
+estimated_demo_cost_usd = 0
+credit_expiry = "2026-12-01T00:00:00Z"
+free_plan_expiry = "2026-12-01T00:00:00Z"
+teardown_at = "2026-11-01T00:00:00Z"

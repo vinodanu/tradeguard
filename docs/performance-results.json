@@ -1,0 +1,10 @@
+{
+  "status": "NOT_RUN",
+  "target": {
+    "p95SubmissionToDecisionSeconds": 2,
+    "ordersPerSecond": 5,
+    "streamClients": 20,
+    "durationSeconds": 1800
+  },
+  "reason": "Requires working Docker engine and running full stack; no performance result is claimed."
+}

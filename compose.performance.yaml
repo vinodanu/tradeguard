@@ -1,0 +1,5 @@
+# Local only. Never combine with compose.aws.yaml or Atlas Free.
+services:
+  trade-service:
+    environment:
+      MAX_DEMO_ORDERS: 15000
